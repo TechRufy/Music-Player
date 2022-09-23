@@ -58,6 +58,10 @@
         align-items: center;
     }
 
+    .slider_container div {
+        cursor: pointer;
+    }
+
     .slider_container i {
         font-size: 1.4em;
     }
@@ -130,4 +134,9 @@
     .song {
         padding: 20px 10px 5px 10px;
         border-bottom: 1px solid #fff;
+        cursor: pointer;
+    }
+
+    .song:hover {
+        color: rgb(180, 180, 180);
     }

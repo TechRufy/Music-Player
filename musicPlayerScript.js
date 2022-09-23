@@ -10,6 +10,8 @@ const title = document.querySelector(".title");
 const artist = document.querySelector(".artist"); 
 //Volume       
 const volumeTrack = document.querySelector(".volume_slider");
+const volumeDown = document.querySelector(".volume_down");
+const volumeUp = document.querySelector(".volume_up");
 //Duration slider
 const songSlider = document.querySelector(".seek_slider");
 const currentTime = document.querySelector(".current_time");
@@ -25,6 +27,7 @@ let songIsPlaying = false;
 let autoplay = false;
 let shuffle = false;
 let first = false;
+let trackDisplay = false;
 let track = document.createElement("audio");
 
 //All Event Listeners
@@ -38,6 +41,8 @@ autoPlayBtn.addEventListener('click', autoPlayToggle);
 shuffleBtn.addEventListener('click', shuffleToggle);
 songSlider.addEventListener('change', changeDuration);
 track.addEventListener('timeupdate', songTimeUpdate);
+volumeDown.addEventListener('click', muteVolume);
+volumeUp.addEventListener('click', maxVolume);
 
 //Load Tracks
 function loadTrack (indexTrack) {
@@ -80,15 +85,21 @@ function pauseSong() {
 
 //Next Song
 function nextSong() {
-    if(indexTrack < songPlaylist.length-1){
-        indexTrack++;
+    if(shuffle == true){
+        indexTrack = isShuffle();
         loadTrack(indexTrack);
         playSong();
-    }else {
-        indexTrack = 0;
-        loadTrack(indexTrack);
-        playSong();
-    }
+    }else{
+        if(indexTrack < songPlaylist.length-1){
+            indexTrack++;
+            loadTrack(indexTrack);
+            playSong();
+        }else {
+            indexTrack = 0;
+            loadTrack(indexTrack);
+            playSong();
+        }
+    }  
 }
 
 //Prev Song
@@ -107,6 +118,16 @@ function prevSong() {
 //Volume control
 function volumeControl() {
     track.volume = (volumeTrack.value) / 100;
+}
+
+function muteVolume() {
+    track.volume = 0;
+    volumeTrack.value = 0;
+}
+
+function maxVolume() {
+    track.volume = 1;
+    volumeTrack.value = 100;
 }
 
 //Time Slider
@@ -134,6 +155,10 @@ function updateSlider() {
             indexTrack = 0;
             loadTrack(indexTrack);
             playSong();
+        }else if(autoplay == true && shuffle == true){
+            indexTrack = isShuffle();
+            loadTrack(indexTrack);
+            playSong();
         }else if(autoplay == false){
             resetSlider();
         }
@@ -145,12 +170,34 @@ function openPlaylist() {
     hamburgerMenu.classList.add('remove');
     exitIcon.classList.remove('remove');
     playlistMenu.setAttribute('style', 'opacity: 0.9; transition: .5s; visibility: visible');
+
+    if(trackDisplay == false){
+        trackDisplay = true;
+        displayTracks();
+    }
 }
 
 function closePlaylist() {
     hamburgerMenu.classList.remove('remove');
     exitIcon.classList.add('remove');
     playlistMenu.setAttribute('style', 'opacity: 0; transition: .5s; visibility: hidden');
+}
+
+//Create elements of playlist in menu
+function displayTracks() {
+    for(let i=0; i < songPlaylist.length; i++){
+        let div = document.createElement("div");
+        div.classList.add("song");
+        div.innerHTML = `
+            <span>${i+1}.</span>
+            <span>${songPlaylist[i].name}</span>
+        `;
+        playlistMenu.appendChild(div);
+        div.addEventListener("click", () => {
+            loadTrack(i);
+            playSong();
+        })
+    }
 }
 
 //AutoPlay
@@ -168,7 +215,7 @@ function autoPlayToggle() {
 function shuffleToggle() {
     if(shuffle == false){
         shuffle = true;
-        shuffleBtn.style.color = "#4DBA14";            //Rivedi
+        shuffleBtn.style.color = "#4DBA14";            
     }else{
         shuffle = false;
         shuffleBtn.style.color = "black";
@@ -203,12 +250,6 @@ function songTimeUpdate() {
     }
 }
 
-// function isShuffle() {
-//     while(shuffle == true){
-//         indexTrack = Math.floor(Math.random()*songPlaylist.length);
-//     }
-// }
-
-
-
-// totalDuration.innerText = `${Math.floor(song.duration / 60)}:${Math.floor(song.duration % 60)}`;
+function isShuffle() {
+    return indexTrack = Math.floor(Math.random()*songPlaylist.length);
+}
