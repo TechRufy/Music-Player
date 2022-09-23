@@ -139,4 +139,5 @@
 
     .song:hover {
         color: rgb(180, 180, 180);
+        border-bottom: 1px solid rgb(180, 180, 180);
     }
