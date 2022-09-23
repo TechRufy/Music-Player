@@ -1,9 +1,11 @@
+
+
 let songPlaylist = [
     {
         name: "Light My Love",
         artist: "Greta Van Fleet",
-        imgAlbum: "Immagini/The Battle at Garden's Gate.jpg",
-        path: "Brani/Greta Van Fleet - Light My Love.mp3",
+        imgAlbum: "{% static 'MusicPlayer/Immagini/The Battle at Garden's Gate' %}",
+        path: "{% static 'MusicPlayer/Brani/Greta Van Fleet - Light My Love.mp3' %}",
     },
     {
         name: "Stardust Chords",
