@@ -24,27 +24,32 @@ let indexTrack = 0;
 let songIsPlaying = false;
 let autoplay = false;
 let shuffle = false;
+let first = false;
 let track = document.createElement("audio");
 
 //All Event Listeners
-play.addEventListener("click", justPlay);
-next.addEventListener("click", nextSong);
-prev.addEventListener("click", prevSong);
+play.addEventListener('click', justPlay);
+next.addEventListener('click', nextSong);
+prev.addEventListener('click', prevSong);
 volumeTrack.addEventListener("change", volumeControl);
 hamburgerMenu.addEventListener('click', openPlaylist);
 exitIcon.addEventListener('click', closePlaylist);
 autoPlayBtn.addEventListener('click', autoPlayToggle);
 shuffleBtn.addEventListener('click', shuffleToggle);
+songSlider.addEventListener('change', changeDuration);
+track.addEventListener('timeupdate', songTimeUpdate);
 
 //Load Tracks
 function loadTrack (indexTrack) {
+    clearInterval(timer);
+    resetSlider();
     track.src = songPlaylist[indexTrack].path;
     trackImage.src = songPlaylist[indexTrack].imgAlbum;
     title.innerHTML = songPlaylist[indexTrack].name;
     artist.innerHTML = songPlaylist[indexTrack].artist;
     track.load();   //Rivedi
+    timer = setInterval(updateSlider, 1000);
 }
-loadTrack(indexTrack);
 
 //Just Play
 function justPlay() {
@@ -57,6 +62,10 @@ function justPlay() {
 
 //Play Songs
 function playSong() {
+    if(first == false){
+        first = true;
+        loadTrack(indexTrack);
+    }
     track.play();
     songIsPlaying = true;
     play.innerHTML = '<i class="bi bi-pause-circle"></i>';
@@ -100,6 +109,37 @@ function volumeControl() {
     track.volume = (volumeTrack.value) / 100;
 }
 
+//Time Slider
+function changeDuration() {
+    let sliderPosition = track.duration * (songSlider.value / 100);
+    track.currentTime = sliderPosition;
+}
+
+function resetSlider() {
+    songSlider.value = 0;
+}
+
+function updateSlider() {
+    if(!isNaN(track.duration)) {
+        songSlider.value = track.currentTime * (100 / track.duration);
+    }
+
+    if(track.ended) {
+        play.innerHTML = '<i class="bi bi-play-circle"></i>';
+        if(autoplay == true && indexTrack < songPlaylist.length - 1){
+            indexTrack++;
+            loadTrack(indexTrack);
+            playSong();
+        } else if(autoplay == true && indexTrack == songPlaylist.length - 1){
+            indexTrack = 0;
+            loadTrack(indexTrack);
+            playSong();
+        }else if(autoplay == false){
+            resetSlider();
+        }
+    }
+}
+
 //Open & Close Playlist
 function openPlaylist() {
     hamburgerMenu.classList.add('remove');
@@ -117,7 +157,7 @@ function closePlaylist() {
 function autoPlayToggle() {
     if(autoplay == false){
         autoplay = true;
-        autoPlayBtn.style.color = "#4DBA14";            //Rivedi
+        autoPlayBtn.style.color = "#4DBA14";            
     }else{
         autoplay = false;
         autoPlayBtn.style.color = "black";
@@ -134,6 +174,40 @@ function shuffleToggle() {
         shuffleBtn.style.color = "black";
     }
 }
+
+//Update song time
+function songTimeUpdate() {
+    if(track.duration){
+        let currmins = Math.floor(track.currentTime / 60);
+        let currsecs = Math.floor(track.currentTime - (currmins*60));
+        let durmins = Math.floor(track.duration / 60);
+        let dursecs = Math.floor(track.duration - (durmins*60));
+    
+        if(dursecs < 10){
+            dursecs = '0' + dursecs;
+        }
+        if(durmins < 10){
+            durmins = '0' + durmins;
+        }
+        if(currsecs < 10){
+            currsecs = '0' + currsecs;
+        }
+        if(currmins < 10){
+            currmins = '0' + currmins;
+        }
+        currentTime.innerHTML = `${currmins}:${currsecs}`;
+        totalDuration.innerHTML = `${durmins}:${dursecs}`;
+    }else{
+        currentTime.innerHTML = `${00}:${00}`;
+        totalDuration.innerHTML = `${00}:${00}`;
+    }
+}
+
+// function isShuffle() {
+//     while(shuffle == true){
+//         indexTrack = Math.floor(Math.random()*songPlaylist.length);
+//     }
+// }
 
 
 
