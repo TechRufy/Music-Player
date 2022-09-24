@@ -5,6 +5,6 @@ from . import views
 app_name = 'MusicPlayer'
 
 urlpatterns = [
-    path('', views.player, name='player'),
+    path('', views.player.as_view(), name='player'),
     
 ]

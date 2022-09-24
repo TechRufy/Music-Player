@@ -13,6 +13,14 @@
 </head>
 
 <body>
+    {%for index in lista_canzoni%}
+    <p id = "nomeD">{{ song.Nome }}</p>
+    <p id = "artistD">{{song.Artista.Nome}}</p>
+    <p id = "albumD">{{song.Album.PathIMM}}</p>
+    <p id = "pathD">{{song.PathSong}}</p>
+    {%endfor%}
+
+
     <div class="container">
         <div class="menu">
             <i class="bi bi-list hamburger"></i>
@@ -46,9 +54,11 @@
         </div>
 </body>
 <script src="{% static 'MusicPlayer/musicPlayerScript.js' %}"></script>
+
 <script>
     var prefixIMM = "{% static 'MusicPlayer/Immagini/' %}"
     var prefixSON = "{% static 'MusicPlayer/Brani/' %}"
+
 
 let songPlaylist = [
     {
@@ -89,6 +99,7 @@ let songPlaylist = [
         path: "Brani/Eagles - Hotel California.mp3",
     }
 ]
+
 
 </script>
 

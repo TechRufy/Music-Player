@@ -9,8 +9,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.views import generic
+from .models import song
 # Create your views here.
 
 
-def player(request):
-    return render(request, 'MusicPlayer/musicPlayer.html')
+class player(generic.ListView):
+    template_name = 'MusicPlayer/musicPlayer.html'
+    context_object_name = 'lista_canzoni'
+    
+    def get_queryset(self):
+        return song.objects.order_by("Nome")
