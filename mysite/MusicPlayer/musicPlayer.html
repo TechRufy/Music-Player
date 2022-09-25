@@ -4,6 +4,7 @@
 
 <head>
     {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,50 +56,57 @@
 </body>
 <script src="{% static 'MusicPlayer/musicPlayerScript.js' %}"></script>
 
+
 <script>
+var prefixSON = "{% static 'MusicPlayer/Brani/' %}"
+var prefixIMM = "{% static 'MusicPlayer/Immagini/' %}"
+    function CaricaCanzoni()
+    {
+        var playlist = [];
+                $.ajax({
+					url : "caricaCanzoni",
+					type : 'Get',
+					cache : false,
+					timeout : 30000,
+					dataType : "json",
+					success : function(data) {
+                        var array = JSON.parse(data["data"])
+                        for (let song in array)
+                        {
+                            let variabile = {
+                            name : array[song]["fields"]["Nome"],
+                            artist : array[song]["fields"]["Album"],
+                            imgAlbum : prefixIMM + array[song]["fields"]["Album"] + ".jpg",
+                            path :  prefixSON + array[song]["fields"]["PathSong"]
+                            }
+
+                            playlist.push(variabile)
+
+                        }
+					},
+					fail : function(msg) {
+						alert("negativo")
+						return true;
+					}
+				});
+
+                return playlist
+	}//funzione ricercaAjax
+
+
+
+
     var prefixIMM = "{% static 'MusicPlayer/Immagini/' %}"
     var prefixSON = "{% static 'MusicPlayer/Brani/' %}"
 
+let songPlaylist = []
 
-let songPlaylist = [
+    if (songPlaylist.length == 0)
     {
+        songPlaylist = CaricaCanzoni()
+    } 
 
-        name: "Light My Love",
-        artist: "Greta Van Fleet",
-        imgAlbum: prefixIMM + "The Battle at Garden's Gate.jpg",
-        path: prefixSON + "Greta Van Fleet - Light My Love.mp3",
-    },
-    {
-        name: "Stardust Chords",
-        artist: "Greta Van Fleet",
-        imgAlbum: "Immagini/The Battle at Garden\'s Gate.jpg",
-        path: "Brani/Greta Van Fleet - Stardust Chords.mp3",
-    },
-    {
-        name: "Brave New World",
-        artist: "Greta Van Fleet",
-        imgAlbum: "Immagini/Anthem of the Peaceful Army.jpg",
-        path: "Brani/Greta Van Fleet - Brave New World.mp3",
-    },
-    {
-        name: "No Surprises",
-        artist: "Radiohead",
-        imgAlbum: "Immagini/OK Computer.jpg",
-        path: "Brani/Radiohead - No Surprises.mp3",
-    },
-    {
-        name: "One Night Only",
-        artist: "The Struts",
-        imgAlbum: "Immagini/One Night Only.jpg",
-        path: "Brani/The Struts - One Night Only.mp3",
-    },
-    {
-        name: "Hotel California",
-        artist: "Eagles",
-        imgAlbum: "Immagini/Hotel California.jpg",
-        path: "Brani/Eagles - Hotel California.mp3",
-    }
-]
+
 
 
 </script>
