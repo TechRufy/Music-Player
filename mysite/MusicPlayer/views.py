@@ -30,6 +30,8 @@ def caricaCanzoni(request):
 
     t = serialize("json",lista_canzoni)
 
+    print(t)
+
     return JsonResponse({"data" : t}, status = 200)
 
 
