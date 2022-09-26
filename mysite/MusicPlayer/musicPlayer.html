@@ -21,7 +21,7 @@
         </div>
         <img src="{% static 'MusicPlayer/Immagini/default.jpg' %}" alt="" class="track-image">
         <p class="title">Song Title</p>
-        <p class="artist">Artist</p>
+        <a href="{% url 'MusicPlayer:PaginaArtista' 'default' %}" id = "linkArt"><p class="artist">Artist</p></a>
         <div class="slider_container">
             <p class="current_time">00:00</p>
             <input type="range" min="1" max="100" value="0" class="seek_slider">
@@ -67,7 +67,7 @@ var prefixIMM = "{% static 'MusicPlayer/Immagini/' %}"
                         {
                             let variabile = {
                             name : array[song]["fields"]["Nome"],
-                            artist : array[song]["fields"]["Album"].replace("_"," "),
+                            artist : array[song]["fields"]["Artista"].replace("_"," "),
                             imgAlbum : prefixIMM + array[song]["fields"]["Album"] + ".jpg",
                             path :  prefixSON + array[song]["fields"]["PathSong"]
                             }

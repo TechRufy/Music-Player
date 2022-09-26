@@ -7,7 +7,8 @@ const shuffleBtn = document.querySelector(".shuffle");
 //Song attributes
 const trackImage = document.querySelector(".track-image");   
 const title = document.querySelector(".title");
-const artist = document.querySelector(".artist"); 
+const artist = document.querySelector(".artist");
+const href = document.querySelector("#linkArt");
 //Volume       
 const volumeTrack = document.querySelector(".volume_slider");
 const volumeDown = document.querySelector(".volume_down");
@@ -44,7 +45,7 @@ track.addEventListener('timeupdate', songTimeUpdate);
 volumeDown.addEventListener('click', muteVolume);
 volumeUp.addEventListener('click', maxVolume);
 
-//Load Tracks
+//Load TrackssongPlaylist[indexTrack].name;
 function loadTrack (indexTrack) {
     clearInterval(timer);
     resetSlider();
@@ -52,6 +53,7 @@ function loadTrack (indexTrack) {
     trackImage.src = songPlaylist[indexTrack].imgAlbum;
     title.innerHTML = songPlaylist[indexTrack].name;
     artist.innerHTML = songPlaylist[indexTrack].artist;
+    href.href = href.href.replace("default",songPlaylist[indexTrack].artist)
     track.load();   //Rivedi
     timer = setInterval(updateSlider, 1000);
 }

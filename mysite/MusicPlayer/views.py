@@ -1,5 +1,6 @@
 import json
 from re import S
+from urllib import request
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404, render
 
@@ -10,7 +11,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.views import generic
-from .models import song
+from .models import Artist, song
 from django.core.serializers import serialize
 from django.http import JsonResponse
 # Create your views here.
@@ -24,13 +25,24 @@ class player(generic.ListView):
         return song.objects.order_by("Nome")
 
 
+class PaginaArtista(generic.DetailView):
+
+    model = Artist
+    template_name = 'MusicPlayer/detail.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(Nome=self.kwargs["pk"])
+
+
+
+
+
+
 def caricaCanzoni(request):
     lista_canzoni = song.objects.order_by("Nome")
 
-
     t = serialize("json",lista_canzoni)
 
-    print(t)
 
     return JsonResponse({"data" : t}, status = 200)
 
